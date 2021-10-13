@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/utils/utils.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:todo_app/shared_widgets/todo_tile_widget.dart';
+import 'package:todo_app/utilities/utils.dart';
+import 'package:todo_app/views/create_todo_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -9,123 +12,117 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        leadingWidth: 50.0,
-        title: const Text('My Tasks'),
+        leadingWidth: 50,
         leading: const Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(left: 8.0),
           child: CircleAvatar(
-            radius: 45.0,
-            backgroundColor: Colors.white,
+            radius: 25,
+            backgroundColor: Colors.red,
             backgroundImage: AssetImage('assets/profile.jpeg'),
           ),
         ),
-        actions: <Widget>[
+        title: const Text('My Tasks'),
+        actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.sort)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.search))
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.separated(
-          padding: const EdgeInsets.all(15.0),
-          itemBuilder: (BuildContext context, index) {
-            return const TodoTileWidget();
-          },
-          separatorBuilder: (BuildContext context, index) {
-            return const SizedBox(
-              height: 20.0,
+      body: ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemBuilder: (context, index) {
+            return const TodoTileWidget(
+              status: false,
             );
           },
-          itemCount: 10,
-        ),
+          separatorBuilder: (context, index) {
+            return const SizedBox(
+              height: 10,
+            );
+          },
+          itemCount: 10),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return const CreateTodoView();
+          }));
+        },
+        child: const Icon(Icons.add),
       ),
-      floatingActionButton:
-          const FloatingActionButton(onPressed: null, child: Icon(Icons.add)),
       bottomNavigationBar: SafeArea(
         child: InkWell(
           onTap: () {
-            showModalBottomSheet(
+            showBarModalBottomSheet(
                 context: context,
-                // shape:
                 builder: (context) {
-                  return ListView(
-                    children: [],
-                  );
+                  return const CompletedTodoWidget();
                 });
           },
           child: Container(
-              height: 50.0,
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              // color: Colors.blue,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+            height: 50,
+            margin: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            decoration: BoxDecoration(
                 color:
                     Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.check_circle, color: customBlue),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text('Completed',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: customBlue)),
-                      const Icon(Icons.keyboard_arrow_down, color: customBlue)
-                    ],
-                  ),
-                  Text('24',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2!
-                          .copyWith(color: customBlue)),
-                ],
-              )),
+                borderRadius: BorderRadius.circular(10)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.check_circle,
+                      color: customBlue,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Completed',
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontWeight: FontWeight.w600, color: customBlue),
+                    ),
+                    const Icon(
+                      Icons.keyboard_arrow_down,
+                      color: customBlue,
+                    )
+                  ],
+                ),
+                Text(
+                  '24',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2!
+                      .copyWith(color: customBlue),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 }
 
-class TodoTileWidget extends StatelessWidget {
-  const TodoTileWidget({
+class CompletedTodoWidget extends StatelessWidget {
+  const CompletedTodoWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: Icon(Icons.check_circle_outline_rounded,
-            size: 30, color: dateColor('Today')),
-        title: Text("Plan trip to Finland",
-            style:
-                Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 20)),
-        subtitle: Text("Plan for the family's trip next summer",
-            style: Theme.of(context)
-                .textTheme
-                .bodyText2!
-                .copyWith(color: Colors.grey)),
-        trailing: TextButton.icon(
-          onPressed: () {},
-          icon: Icon(Icons.notifications, color: dateColor('Yesterday')),
-          label: Text(
-            "Yesterday",
-            style: Theme.of(context)
-                .textTheme
-                .bodyText2!
-                .copyWith(color: dateColor('Yesterday')),
-          ),
-        ),
-      ),
-    );
+    return ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemBuilder: (context, index) {
+          return const TodoTileWidget(
+            status: true,
+          );
+        },
+        separatorBuilder: (context, index) {
+          return const SizedBox(
+            height: 10,
+          );
+        },
+        itemCount: 10);
   }
 }
