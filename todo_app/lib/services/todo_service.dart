@@ -1,42 +1,49 @@
+import 'dart:convert';
+
 import 'package:http/http.dart';
 
 class TodoService {
-  Future<Response> getAllTodoRequest() async {
-    return await get(Uri.parse("https://dog-9-e-u-a-9-.cyclic-app.com/todos"));
+  Future<Response> getAllTodoRequest(bool status) async {
+    return await get(
+        Uri.parse("https://dog-9-e-u-a-9-.cyclic-app.com/todos/$status"));
   }
 
-//get todo by id
   Future<Response> getTodoByIdRequest(String id) async {
     return await get(
         Uri.parse("https://dog-9-e-u-a-9-.cyclic-app.com/todos/$id"));
   }
 
-  //create new todo
-  Future<Response> createTodo(
+//create a new todo
+  Future<Response> createTodoRequest(
       {required String title,
       required String description,
       required String dateTime}) async {
     Map<String, String> body = {
       "title": title,
       "description": description,
-      "date_time": dateTime,
+      "date_time": dateTime
     };
+
+    Map<String, String> header = {'Content-Type': 'application/json'};
+
     return await post(Uri.parse("https://dog-9-e-u-a-9-.cyclic-app.com/todo"),
-        body: body);
+        body: jsonEncode(body), headers: header);
   }
 
-  //update todo status
+  //update status of todo
   Future<Response> updateTodoRequest(
       {required bool status, required String id}) async {
-    Map<String, bool> body = {
-      "status": status,
-    };
+    Map<String, bool> body = {"status": status};
+
+    Map<String, String> header = {'Content-Type': 'application/json'};
+
     return await patch(
         Uri.parse("https://dog-9-e-u-a-9-.cyclic-app.com/todos/$id"),
-        body: body);
+        body: jsonEncode(body),
+        headers: header);
   }
 
-  //delete todo
+  //delete a todo
   Future<Response> deleteTodoRequest(String id) async {
     return await delete(
         Uri.parse("https://dog-9-e-u-a-9-.cyclic-app.com/todos/$id"));

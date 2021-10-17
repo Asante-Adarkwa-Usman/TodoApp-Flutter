@@ -10,14 +10,14 @@ String todoToMap(Todo data) => json.encode(data.toMap());
 
 class Todo {
   Todo({
-    this.status,
-    this.message,
-    this.data,
+    required this.status,
+    required this.message,
+    required this.data,
   });
 
-  bool? status;
-  String? message;
-  List<Datum>? data;
+  bool status;
+  String message;
+  List<Datum> data;
 
   factory Todo.fromMap(Map<String, dynamic> json) => Todo(
         status: json["status"],
@@ -28,7 +28,7 @@ class Todo {
   Map<String, dynamic> toMap() => {
         "status": status,
         "message": message,
-        "data": List<dynamic>.from(data!.map((x) => x.toMap())),
+        "data": List<dynamic>.from(data.map((x) => x.toMap())),
       };
 }
 
@@ -38,7 +38,7 @@ class Datum {
     required this.title,
     required this.description,
     required this.dateTime,
-    required this.status,
+    required this.status
   });
 
   String id;
@@ -52,7 +52,7 @@ class Datum {
         title: json["title"],
         description: json["description"],
         dateTime: json["date_time"],
-        status: json["status"],
+        status: json["status"]
       );
 
   Map<String, dynamic> toMap() => {
@@ -60,6 +60,6 @@ class Datum {
         "title": title,
         "description": description,
         "date_time": dateTime,
-        "status": status,
+        "status": status
       };
 }
